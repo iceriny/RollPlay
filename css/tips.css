@@ -1,19 +1,29 @@
 #tips {
-    display: block;
     position: absolute;
+    z-index: 999;
+
+    padding: 5px;
+    border-radius: .8em;
 
     max-width: 10rem;
-    max-height: 10rem;
+    pointer-events: none;
 
-    background-color: rgba(228, 137, 137, 0.5);
+
+    transition: opacity 0.5s cubic-bezier(0.075, 0.82, 0.5, 1);
+}
+#tips::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    filter: blur(15px);
+    background-color: rgb(202, 137, 154); /* 半透明黑色背景，可以根据需要调整透明度 */
+    z-index: -1; /* 将半透明背景置于内容下方 */
 }
 
-.show-tips {
-    display: block;
-    position: absolute;
-
-    max-width: 10rem;
-    max-height: 10rem;
-
-    background-color: rgba(228, 137, 137, 0.5);
+.tips-text {
+    font-size: 1.2rem;
+    color: rgb(249, 218, 218);
 }
