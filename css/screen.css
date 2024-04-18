@@ -1,0 +1,36 @@
+#full-screen-effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    z-index: 500;
+    pointer-events:none;
+
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+
+    animation: effects-color 10s infinite alternate;
+}
+
+@keyframes effects-color {
+    0% {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+    20% {
+        background-color: rgba(36, 26, 26, 0.8);
+    }
+    40% {
+        background-color: rgba(38, 27, 39, 0.8);
+    }
+    60% {
+        background-color: rgba(28, 32, 38, 0.8);
+    }
+    80% {
+        background-color: rgba(29, 40, 34, 0.8);
+    }
+    100% {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+}

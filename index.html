@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" href="./img/logo.png" />
+        <title>Roll Play</title>
+        <link rel="stylesheet" href="./css/container.css" />
+        <link rel="stylesheet" href="./css/screen.css" />
+        <link rel="stylesheet" href="./css/title.css" />
+        <link rel="stylesheet" href="./css/content.css" />
+        <link rel="stylesheet" href="./css/effects.css" />
+
+        <script src="./js/index.js"></script>
+        <script src="./js/event.js"></script>
+    </head>
+    <body>
+        <div class="title-container" id="title">
+            <h1 id="title-text">Roll</h1>
+            <img
+                id="title-logo"
+                class="logo-hover title-logo-start"
+                onmouseover="logo_hover(event)"
+                onmouseleave="logo_leave(event)"
+                onclick="logo_click(event)"
+                src="./img/logo.png"
+                alt="logo"
+            />
+            <h1 id="title-text">Play</h1>
+        </div>
+
+        <div id="content">
+            <div id="content-left" class="content-container">
+                <div class="content-title">
+                    <h2>命运</h2>
+                    <img class="content-icon" src="./img/card.png" alt="logo" />
+                    <h2>预示</h2>
+                </div>
+            </div>
+            <div id="content-right" class="content-container">
+                <div class="content-title">
+                    <h2>祈</h2>
+                    <img class="content-icon" data-tips="导入玩家" onclick="import_player()" src="./img/hands.png" alt="logo" />
+                    <h2>徒</h2>
+                </div>
+            </div>
+        </div>
+
+        <div id="full-screen-effects" class=""></div>
+        <div id="tips" class=""></div>
+    </body>
+</html>
