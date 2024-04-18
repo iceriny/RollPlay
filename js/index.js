@@ -108,6 +108,17 @@ function formatTimestamp(timestamp) {
  * @param {boolean} isOpen 是否展开
  */
 function createResultElement(result, isOpen = true) {
+
+    function toggle(o) {
+        if (o) {
+            resultItem.style.backgroundColor = "#eeebe8";
+            resultTitleElement.style.backgroundColor = "rgb(215, 215, 215)";
+        } else {
+            resultItem.style.backgroundColor = "#dfdfdf";
+            resultTitleElement.style.backgroundColor = "rgb(223, 223, 223)";
+        }
+    }
+
     const Timestamp = Date.now();
     const id = `result-${Timestamp}`;
     const title = formatTimestamp(Timestamp);
@@ -117,10 +128,12 @@ function createResultElement(result, isOpen = true) {
     const resultItem = document.createElement("div");
     resultItem.classList.add("result-item");
     resultItem.id = id;
+    resultItem.style.backgroundColor = "#dfdfdf";
 
     const resultTitleElement = document.createElement("div");
     resultTitleElement.classList.add("result-item-title");
     resultTitleElement.innerText = title;
+    toggle(isOpen);
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -128,11 +141,7 @@ function createResultElement(result, isOpen = true) {
     checkbox.style.display = "none";
     checkbox.addEventListener("change", () => {
         const value = checkbox.checked;
-        if (value) {
-            resultItem.style.backgroundColor = "#dfdfdf";
-        } else {
-            resultItem.style.backgroundColor = "#eeebe8";
-        }
+        toggle(!value);
     });
     checkbox.classList.add("expand-button-check");
     checkbox.id = checkBoxID;
@@ -167,6 +176,24 @@ function createResultElement(result, isOpen = true) {
     resultItem.appendChild(upOrDown);
 
     return resultItem;
+}
+/**
+ * 设置某个结果项的展开样式
+ * @param {HTMLDivElement} resultItem 结果项
+ * @param {boolean} isOpen 是否打开
+ */
+function setResultItemStyle(resultItem, isOpen) {
+    let resultTitleElement = resultItem.querySelector(".result-item-title");
+    let expandButtonCheck = resultItem.querySelector("input");
+    if (isOpen) {
+        expandButtonCheck.checked = !isOpen;
+        resultItem.style.backgroundColor = "#eeebe8";
+        resultTitleElement.style.backgroundColor = "rgb(215, 215, 215)";
+    } else {
+        expandButtonCheck.checked = !isOpen;
+        resultItem.style.backgroundColor = "#dfdfdf";
+        resultTitleElement.style.backgroundColor = "rgb(223, 223, 223)";
+    }
 }
 /**
  * 生成玩家元素

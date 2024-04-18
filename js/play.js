@@ -19,8 +19,8 @@ function Play() {
     list.sort((a, b) => b[1] - a[1]);
     const lastResultElement = ResultContainerElement.lastElementChild;
     if (lastResultElement && lastResultElement.className === "result-item") {
-        const input = lastResultElement.querySelector("input")
-        if (input) input.checked = true;
+        setResultItemStyle(lastResultElement)
     }
     ResultContainerElement.appendChild(createResultElement(list));
+    ResultContainerElement.scrollTop = ResultContainerElement.scrollHeight;
 }
