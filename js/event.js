@@ -49,7 +49,7 @@ function show_input() {
 
     if (PlayerMap.size > 0) {
         let text = "";
-        PlayerMap.keys().forEach((player) => (text += `${player[0]}, `));
+        PlayerMap.keys().forEach((player) => (text += `${player}, `));
         UserInputElement.value = text;
     }
 
