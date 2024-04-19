@@ -52,33 +52,6 @@ const PlayerMap = new Map();
 document.addEventListener("DOMContentLoaded", () => {
     ScreenEffectElement = document.getElementById("full-screen-effects");
     const logo = document.getElementById("title-logo");
-    // logo.addEventListener("dragstart", (e) => {
-    //     console.log(e);
-    //     //e.preventDefault();
-    //     e.dataTransfer.effectAllowed = "move";
-    //     // 设置拖动数据（例如，你可以拖动元素的id或其他信息）
-    //     e.dataTransfer.setData("text/plain", logo.id);
-    //     e.dataTransfer.setDragImage(logo, 200, 200);
-    //     logo_dragStart(e);
-    // });
-    // logo.addEventListener("dragend", (e) => {
-    //     logo_dragEnd(e);
-    // });
-    // logo.addEventListener("drag", (e) => {
-    //     logo_drag(e);
-    // });
-    // // 添加dragover事件监听器以允许放置目标接受拖放
-    // document.body.addEventListener("dragover", function (event) {
-    //     event.preventDefault(); // 必须阻止默认行为才能让drop事件触发
-    //     event.dataTransfer.dropEffect = "move"; // 根据需求设置拖放效果
-    // });
-
-    // // 添加drop事件监听器以处理拖放释放
-    // document.body.addEventListener("drop", function (event) {
-    //     event.preventDefault(); // 阻止默认行为
-    //     var draggedItemId = event.dataTransfer.getData("text/plain"); // 获取拖动的数据
-    //     // 在此处执行拖放后需要的操作，例如移动元素、交换位置等
-    // });
     setTimeout(() => {
         ScreenEffectElement.classList.add("slow-hide");
         logo.classList.remove("title-logo-start");
@@ -106,6 +79,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     LoadPlayerList();
+});
+window.addEventListener("mousedown", (event) => {
+    if (
+        isShowingInput &&
+        event.target !== UserInputContainerElement &&
+        event.target !== UserInputElement &&
+        event.target !== ImportButtonElement &&
+        event.target !== ExportConfirmedButtonElement
+    ) {
+        hide_input();
+    }
 });
 window.addEventListener("resize", () => {
     rePositionUserInputElement();

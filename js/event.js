@@ -39,7 +39,6 @@ function import_click() {
     show_input();
 }
 let isShowingInput = false;
-let addedHideInputEventListener = false;
 function show_input() {
     ShowScreenEffect();
     UserInputContainerElement.classList.remove("hide");
@@ -51,21 +50,6 @@ function show_input() {
         let text = "";
         PlayerMap.keys().forEach((player) => (text += `${player}, `));
         UserInputElement.value = text;
-    }
-
-    if (!addedHideInputEventListener) {
-        window.addEventListener("click", (event) => {
-            if (
-                isShowingInput &&
-                event.target !== UserInputContainerElement &&
-                event.target !== UserInputElement &&
-                event.target !== ImportButtonElement &&
-                event.target !== ExportConfirmedButtonElement
-            ) {
-                hide_input();
-            }
-        });
-        addedHideInputEventListener = true;
     }
 }
 function hide_input() {
