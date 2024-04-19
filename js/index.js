@@ -155,7 +155,7 @@ function createResultElement(result, isOpen = true) {
 
     const pisces = document.createElement("img");
     pisces.classList.add("pisces");
-    pisces.src = "../img/pisces.png";
+    pisces.src = "./img/pisces.png";
 
     const box = document.createElement("div");
     box.classList.add("expand-box");
