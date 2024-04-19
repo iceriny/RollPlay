@@ -15,7 +15,9 @@
     opacity: 1;
     transition: opacity 3s cubic-bezier(0.075, 0.82, 0.5, 1);
 }
-
+.show-animation-class {
+    animation: show-animation 1s cubic-bezier(0.075, 0.82, 0.5, 1);
+}
 .slow-show-animation-class {
     animation: show-animation 3s cubic-bezier(0.075, 0.82, 0.5, 1);
 }

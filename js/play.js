@@ -17,6 +17,7 @@ function Play() {
         info.push(Dice(100));
         list.push(info);
     }
+    if (list.length === 0) return;
     list.sort((a, b) => b[1] - a[1]);
     InsertResult(list);
 }
@@ -26,10 +27,10 @@ function InsertResult(result) {
         setResultItemStyle(firstResultElement);
     }
     const r = createResultElement(result)
-    r.classList.add("slow-show-animation-class");
+    r.classList.add("show-animation-class");
     ResultContainerElement.insertBefore(r, ResultContainerElement.firstElementChild);
     setTimeout(() => {
-        r.classList.remove("slow-show-animation-class");
+        r.classList.remove("show-animation-class");
     }, 3000);
 }
 
