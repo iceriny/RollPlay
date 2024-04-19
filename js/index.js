@@ -42,11 +42,12 @@ let ImportButtonElement;
  */
 let PlayerContainer;
 
+const ImgPath = isLocalhost() ? "../img/" : "./img/";
 /**
  * 玩家列表
- * @type {String[]}
+ * @type {Map<string, boolean>}
  */
-const PlayerList = [];
+const PlayerMap = new Map();
 
 document.addEventListener("DOMContentLoaded", () => {
     ScreenEffectElement = document.getElementById("full-screen-effects");
@@ -60,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ImportButtonElement = document.getElementById("import-button");
     UserInputElement = document.getElementById("user-input-text");
     PlayerContainer = document.getElementById("player-container");
-    ResultContainerElement = document.getElementById("content-left");
+    ResultContainerElement = document.getElementById("result-container");
     ExportConfirmedButtonElement = document.getElementById("user-input-button");
     UserInputContainerElement = UserInputElement.parentElement;
     rePositionUserInputElement();
@@ -108,7 +109,6 @@ function formatTimestamp(timestamp) {
  * @param {boolean} isOpen 是否展开
  */
 function createResultElement(result, isOpen = true) {
-
     function toggle(o) {
         if (o) {
             resultItem.style.backgroundColor = "#eeebe8";
@@ -155,14 +155,21 @@ function createResultElement(result, isOpen = true) {
 
     const pisces = document.createElement("img");
     pisces.classList.add("pisces");
-    pisces.src = "./img/pisces.png";
+    pisces.src = `${ImgPath}pisces.png`;
 
     const box = document.createElement("div");
     box.classList.add("expand-box");
-    for (const r of result) {
-        //TODO: 添加结果的项内容
+
+    const resultCount = result.length;
+    const winColor = interpolateColor("rgb(0, 255, 119)", "rgb(245, 245, 245)", Math.floor(resultCount / 2))
+    const loseColor = interpolateColor("rgb(245, 245, 245)", "rgb(255, 25, 0)", Math.max(resultCount / 2))
+    const colorList = winColor.concat(loseColor);
+    for (let i = 0; i < resultCount; i++) {
+        const r = result[i];
+        const color = colorList[i];
         const item = document.createElement("div");
         item.classList.add("expand-box-item");
+        item.style.filter = `drop-shadow(0 0 .5rem ${color})`;
         item.innerHTML = `${r[0]}: ${r[1]}`;
         box.appendChild(item);
     }
@@ -197,9 +204,9 @@ function setResultItemStyle(resultItem, isOpen) {
 }
 /**
  * 生成玩家元素
- * @param {string} name 玩家名称
+ * @param {[string, boolean]} player 玩家
  */
-function createPlayerElement(name) {
+function createPlayerElement(player) {
     const playerElement = document.createElement("div");
     playerElement.classList.add("player-item");
 
@@ -209,7 +216,26 @@ function createPlayerElement(name) {
 
     const playerName = document.createElement("div");
     playerName.classList.add("player-name");
-    playerName.innerText = name;
+    playerName.innerText = player[0];
+
+    playerElement.setAttribute("enable-player", player[1]);
+    if (player[1] == false) playerElement.classList.add("disabled-player");
+    playerElement.addEventListener("click", () => {
+        const enablePlayer = playerElement.getAttribute("enable-player");
+        if (enablePlayer == "true") {
+            // 禁用玩家
+            PlayerMap.set(player[0], false);
+            playerElement.classList.add("disabled-player");
+            playerElement.setAttribute("enable-player", "false");
+
+        } else {
+            // 启用玩家
+            PlayerMap.set(player[0], true);
+            playerElement.classList.remove("disabled-player");
+            playerElement.setAttribute("enable-player", "true");
+        }
+        SavePlayerList();
+    });
 
     playerElement.appendChild(playerIcon);
     playerElement.appendChild(playerName);
@@ -218,22 +244,92 @@ function createPlayerElement(name) {
 }
 
 function CreateAllPlayerElement() {
-    if (PlayerList.length === 0) return;
+    if (PlayerMap.size === 0) return;
     PlayerContainer.innerHTML = "";
-    for (const player of PlayerList) {
+    for (const player of PlayerMap) {
         PlayerContainer.appendChild(createPlayerElement(player));
     }
 }
 
 function SavePlayerList() {
-    localStorage.setItem("PlayerList", JSON.stringify(PlayerList));
+    localStorage.setItem("PlayerMap", JSON.stringify(Object.fromEntries(PlayerMap)));
 }
 
 function LoadPlayerList() {
     /** @type {string} */
-    const l = localStorage.getItem("PlayerList");
-    if (l != null) {
-        JSON.parse(l).forEach((p) => PlayerList.push(p));
+    const lString = localStorage.getItem("PlayerMap");
+    const obj = JSON.parse(lString)
+    const l = obj ? Object.entries(JSON.parse(lString)) : [];
+    if (l.length > 0) {
+        l.forEach((p) => PlayerMap.set(p[0], p[1]));
         CreateAllPlayerElement();
     }
+}
+
+/**
+ * 判断是否在localhost上运行
+ * @returns {boolean} 是否在localhost上运行
+ */
+function isLocalhost() {
+    // 获取当前页面的协议和主机名
+    var protocol = window.location.protocol;
+    var hostname = window.location.hostname;
+
+    // 检查协议是否为 http 或 https，并且主机名是否为 localhost 或 127.0.0.1
+    if ((protocol === "http:" || protocol === "https:") && (hostname === "localhost" || hostname === "127.0.0.1")) {
+        return true; // 在本地服务器上运行
+    } else {
+        return false; // 不在本地服务器上运行
+    }
+}
+
+/**
+ * 获取渐变颜色
+ * @param {string} color1 起始颜色
+ * @param {string} color2 结束颜色
+ * @param {*} steps 步数
+ * @returns {string[]} 颜色数组
+ */
+function interpolateColor(color1, color2, steps) {
+    // 输入验证
+    if (!isValidColor(color1) || !isValidColor(color2)) {
+        throw new Error("无效的颜色输入。请确保颜色格式为 rgb(x, y, z)。");
+    }
+    if (typeof steps !== "number" || steps <= 1) {
+        throw new Error("步数必须是一个大于1的数字。");
+    }
+
+    // 初始化变量
+    const stepFactor = 1 / (steps - 1);
+    const [r1, g1, b1] = parseRGB(color1);
+    const [r2, g2, b2] = parseRGB(color2);
+    const interpolatedColorArray = [];
+
+    // 渐变计算
+    for (let i = 0; i < steps; i++) {
+        const r = clamp(Math.round(r1 + (r2 - r1) * i * stepFactor), 0, 255);
+        const g = clamp(Math.round(g1 + (g2 - g1) * i * stepFactor), 0, 255);
+        const b = clamp(Math.round(b1 + (b2 - b1) * i * stepFactor), 0, 255);
+
+        interpolatedColorArray.push(`rgb(${r}, ${g}, ${b})`);
+    }
+
+    return interpolatedColorArray;
+}
+
+// 辅助函数：验证颜色格式
+function isValidColor(color) {
+    const regex = /^rgb\(\d{1,3}, \d{1,3}, \d{1,3}\)$/;
+    return regex.test(color);
+}
+
+// 辅助函数：解析RGB颜色
+function parseRGB(color) {
+    const matches = color.match(/\d+/g).map(Number);
+    return [matches[0], matches[1], matches[2]];
+}
+
+// 辅助函数：裁剪RGB值
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(value, max));
 }

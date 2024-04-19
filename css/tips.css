@@ -1,17 +1,16 @@
-#tips {
+.tips {
     position: absolute;
     z-index: 999;
 
     padding: 5px;
     border-radius: .8em;
 
-    max-width: 10rem;
     pointer-events: none;
 
 
     transition: opacity 0.5s cubic-bezier(0.075, 0.82, 0.5, 1);
 }
-#tips::before {
+.tips::before {
     content: "";
     position: absolute;
     top: 0;
@@ -26,4 +25,14 @@
 .tips-text {
     font-size: 1.2rem;
     color: rgb(249, 218, 218);
+}
+
+#help-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 300;
+    background-color: rgba(0, 0, 0, 0.727);
 }

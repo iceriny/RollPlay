@@ -47,9 +47,9 @@ function show_input() {
     UserInputContainerElement.style.pointerEvents = "auto";
     isShowingInput = true;
 
-    if (PlayerList.length > 0) {
+    if (PlayerMap.size > 0) {
         let text = "";
-        PlayerList.forEach((player) => (text += `${player}, `));
+        PlayerMap.keys().forEach((player) => (text += `${player[0]}, `));
         UserInputElement.value = text;
     }
 
@@ -82,16 +82,27 @@ function hide_input() {
 function import_player() {
     const playerListText = UserInputElement.value;
     if (playerListText === "") return;
-    const playerList = playerListText.split(/,|，| |;|；/);
-    playerList.forEach((player) => player.trim());
-    PlayerList.length = 0;
-    playerList.forEach((player) => {
-        if (player === "") return;
-        if (!PlayerList.includes(player)) PlayerList.push(player);
+    let importPlayerList = playerListText.split(/,|，| |;|；/);
+    importPlayerList = importPlayerList.filter((player) => {
+        player.trim();
+        return player !== "";
     });
-    if (playerList.length === 0) return;
+    if (importPlayerList.length === 0) return;
+
+    PlayerMap.size = 0;
+    importPlayerList.forEach((player) => {
+        const playerItem = PlayerMap.get(player);
+        if (!playerItem) {
+            PlayerMap.set(player, true);
+        }
+    });
     hide_input();
     UserInputElement.value = "";
     CreateAllPlayerElement();
     SavePlayerList();
+}
+
+
+function clear_result() {
+    ResultContainerElement.innerHTML = "";
 }

@@ -1,5 +1,6 @@
 #content {
     display: flex;
+    width: 100%;
     justify-content: center;
     align-items: center;
     margin: 1em;
@@ -8,8 +9,8 @@
         display: block;
         margin: 1em;
 
-        overflow:auto;
-        height: 70vh;
+        height: 75vh;
+        overflow: hidden;
 
         border-radius: 1em;
 
@@ -25,94 +26,125 @@
             border-top-right-radius: 1em;
 
             background-color: rgb(220, 220, 220);
+
+            h2 {
+                color: #624b4b;
+                font-size: 2rem;
+                line-height: 0;
+                margin: 1em 0;
+            }
         }
 
         .content-icon {
             width: 2rem;
+            z-index: 301;
             transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
         }
 
         .content-icon:hover {
             cursor: pointer;
-            transform: scale(3);
+            transform: scale(3) translateY(0.3em);
+        }
+
+        .detail-container {
+            height: calc(100% - (2em + (1em * 2)));
+            overflow: auto;
         }
     }
 
     #content-left {
         width: 70%;
 
-        .result-item {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+        .result-container {
+            .result-item {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
 
-            transition: all 0.2s ease-in-out;
+                transition: all 0.2s ease-in-out;
 
-            .result-item-title {
-                width: 100%;
-                text-align: center;
-                font-size: 1.5em;
-                color: #5e4c31;
-            }
+                .result-item-title {
+                    width: 100%;
+                    text-align: center;
+                    font-size: 1.5em;
+                    color: #5e4c31;
+                }
 
-            .expand-button {
-                display: block;
-            }
-            .expand-button .pisces {
-                height: 2em;
-                transform: rotate(180deg);
-                transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-            }
-            .expand-button .pisces:hover {
-                transform: scale(1.2);
-                filter: drop-shadow(0 0 1rem rgb(89, 178, 255));
-            }
+                .expand-button {
+                    display: block;
+                }
+                .expand-button .pisces {
+                    height: 2em;
+                    transform: rotate(180deg);
+                    transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+                }
+                .expand-button .pisces:hover {
+                    transform: scale(1.2);
+                    filter: drop-shadow(0 0 1rem rgb(89, 178, 255));
+                }
 
-            .expand-button-check:checked ~ .expand-box {
-                transform: translate(1.1);
-            }
-            .expand-button-check:checked ~ .expand-box .expand-box-item {
-                max-height: 0;
-                margin: 0;
-                opacity: 0;
-                filter: blur(3px);
+                .expand-button-check:checked ~ .expand-box {
+                    transform: translate(1.1);
+                }
+                .expand-button-check:checked ~ .expand-box .expand-box-item {
+                    max-height: 0;
+                    margin: 0;
+                    opacity: 0;
+                    filter: blur(3px);
 
-                transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
-            }
-            .expand-button-check:checked ~ .up-or-down .pisces {
-                transform: rotate(360deg);
-            }
-            .expand-button-check:checked ~ .up-or-down .pisces:hover {
-                transform: rotate(180deg) scale(1.2);
-                filter: drop-shadow(0 0 1rem rgb(89, 178, 255));
-            }
+                    transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+                }
+                .expand-button-check:checked ~ .up-or-down .pisces {
+                    transform: rotate(360deg);
+                }
+                .expand-button-check:not(:checked) ~ .up-or-down .pisces {
+                    filter: drop-shadow(0 0 0.6rem rgb(0, 255, 119));
+                }
+                .expand-button-check:not(:checked) ~ .up-or-down .pisces:hover {
+                    filter: drop-shadow(0 0 0.6rem rgb(255, 72, 0));
+                }
+                .expand-button-check:checked ~ .up-or-down .pisces:hover {
+                    transform: rotate(180deg) scale(1.2);
+                    filter: drop-shadow(0 0 1rem rgb(89, 178, 255));
+                }
+                .expand-box {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    flex-wrap: wrap;
 
-            .expand-box .expand-box-item {
-                font-size: 1.2em;
-                margin: 0.3em 0;
-                max-height: 70px;
-                overflow: hidden;
-                transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+                    max-height: calc(35em - (2em + (1em * 2)));
+                    width: 100%;
+                }
+
+                .expand-box .expand-box-item {
+                    font-size: 1.2em;
+                    margin: 0.3em;
+                    transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+                }
             }
-        }
-        .result-item:hover {
-            margin-top: 0.3em;
-            margin-bottom: 0.3em;
-            transition: all 0.2s ease-in-out;
+            .result-item:hover {
+                margin-top: 0.3em;
+                margin-bottom: 0.3em;
+                transition: all 0.2s ease-in-out;
+            }
         }
     }
     #content-right {
-        width: 30%;
+        width: calc(30% - 8em);
 
         .player-container {
+            transition: all 0.2s ease-in-out;
+
             .player-item {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-    
+
                 margin: 0.1rem 0;
-                
+
                 background-color: #dfdfdf;
                 .player-icon {
                     width: 1.5rem;
@@ -121,6 +153,10 @@
                     font-size: 1.5rem;
                 }
             }
+        }
+
+        .disabled-player {
+            opacity: 0.2;
         }
     }
 }

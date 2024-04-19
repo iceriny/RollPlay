@@ -11,16 +11,20 @@ function Play() {
      * @type {[string, number][]}
      */
     const list = [];
-    for (const p of PlayerList) {
-        const info = [p];
+    for (const p of PlayerMap) {
+        if (!p[1]) continue;
+        const info = [p[0]];
         info.push(Dice(100));
         list.push(info);
     }
     list.sort((a, b) => b[1] - a[1]);
-    const lastResultElement = ResultContainerElement.lastElementChild;
-    if (lastResultElement && lastResultElement.className === "result-item") {
-        setResultItemStyle(lastResultElement)
-    }
-    ResultContainerElement.appendChild(createResultElement(list));
-    ResultContainerElement.scrollTop = ResultContainerElement.scrollHeight;
+    InsertResult(list);
 }
+function InsertResult(result) {
+    const firstResultElement = ResultContainerElement.firstElementChild;
+    if (firstResultElement && firstResultElement.className === "result-item") {
+        setResultItemStyle(firstResultElement);
+    }
+    ResultContainerElement.insertBefore(createResultElement(result), ResultContainerElement.firstElementChild);
+}
+
