@@ -25,6 +25,11 @@ function InsertResult(result) {
     if (firstResultElement && firstResultElement.className === "result-item") {
         setResultItemStyle(firstResultElement);
     }
-    ResultContainerElement.insertBefore(createResultElement(result), ResultContainerElement.firstElementChild);
+    const r = createResultElement(result)
+    r.classList.add("slow-show-animation-class");
+    ResultContainerElement.insertBefore(r, ResultContainerElement.firstElementChild);
+    setTimeout(() => {
+        r.classList.remove("slow-show-animation-class");
+    }, 3000);
 }
 

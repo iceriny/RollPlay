@@ -52,6 +52,33 @@ const PlayerMap = new Map();
 document.addEventListener("DOMContentLoaded", () => {
     ScreenEffectElement = document.getElementById("full-screen-effects");
     const logo = document.getElementById("title-logo");
+    // logo.addEventListener("dragstart", (e) => {
+    //     console.log(e);
+    //     //e.preventDefault();
+    //     e.dataTransfer.effectAllowed = "move";
+    //     // 设置拖动数据（例如，你可以拖动元素的id或其他信息）
+    //     e.dataTransfer.setData("text/plain", logo.id);
+    //     e.dataTransfer.setDragImage(logo, 200, 200);
+    //     logo_dragStart(e);
+    // });
+    // logo.addEventListener("dragend", (e) => {
+    //     logo_dragEnd(e);
+    // });
+    // logo.addEventListener("drag", (e) => {
+    //     logo_drag(e);
+    // });
+    // // 添加dragover事件监听器以允许放置目标接受拖放
+    // document.body.addEventListener("dragover", function (event) {
+    //     event.preventDefault(); // 必须阻止默认行为才能让drop事件触发
+    //     event.dataTransfer.dropEffect = "move"; // 根据需求设置拖放效果
+    // });
+
+    // // 添加drop事件监听器以处理拖放释放
+    // document.body.addEventListener("drop", function (event) {
+    //     event.preventDefault(); // 阻止默认行为
+    //     var draggedItemId = event.dataTransfer.getData("text/plain"); // 获取拖动的数据
+    //     // 在此处执行拖放后需要的操作，例如移动元素、交换位置等
+    // });
     setTimeout(() => {
         ScreenEffectElement.classList.add("slow-hide");
         logo.classList.remove("title-logo-start");
@@ -65,6 +92,18 @@ document.addEventListener("DOMContentLoaded", () => {
     ExportConfirmedButtonElement = document.getElementById("user-input-button");
     UserInputContainerElement = UserInputElement.parentElement;
     rePositionUserInputElement();
+
+    let touchTimer = -1;
+    const title = document.getElementById("title");
+    title.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        if (touchTimer === -1) {
+            touchTimer = Date.now();
+        }
+        setTimeout(() => {
+            logo.click();
+        }, 300);
+    });
 
     LoadPlayerList();
 });
@@ -161,8 +200,8 @@ function createResultElement(result, isOpen = true) {
     box.classList.add("expand-box");
 
     const resultCount = result.length;
-    const winColor = interpolateColor("rgb(0, 255, 119)", "rgb(245, 245, 245)", Math.floor(resultCount / 2))
-    const loseColor = interpolateColor("rgb(245, 245, 245)", "rgb(255, 25, 0)", Math.max(resultCount / 2))
+    const winColor = interpolateColor("rgb(0, 255, 119)", "rgb(245, 245, 245)", Math.floor(resultCount / 2));
+    const loseColor = interpolateColor("rgb(245, 245, 245)", "rgb(255, 25, 0)", Math.max(resultCount / 2));
     const colorList = winColor.concat(loseColor);
     for (let i = 0; i < resultCount; i++) {
         const r = result[i];
@@ -227,7 +266,6 @@ function createPlayerElement(player) {
             PlayerMap.set(player[0], false);
             playerElement.classList.add("disabled-player");
             playerElement.setAttribute("enable-player", "false");
-
         } else {
             // 启用玩家
             PlayerMap.set(player[0], true);
@@ -245,9 +283,11 @@ function createPlayerElement(player) {
 
 function CreateAllPlayerElement() {
     if (PlayerMap.size === 0) return;
-    PlayerContainer.innerHTML = "";
+    clear_playerElement()
+
     for (const player of PlayerMap) {
-        PlayerContainer.appendChild(createPlayerElement(player));
+        const playerElement = createPlayerElement(player)
+        PlayerContainer.insertBefore(playerElement, PlayerContainer.lastChild);
     }
 }
 
@@ -258,7 +298,7 @@ function SavePlayerList() {
 function LoadPlayerList() {
     /** @type {string} */
     const lString = localStorage.getItem("PlayerMap");
-    const obj = JSON.parse(lString)
+    const obj = JSON.parse(lString);
     const l = obj ? Object.entries(JSON.parse(lString)) : [];
     if (l.length > 0) {
         l.forEach((p) => PlayerMap.set(p[0], p[1]));
@@ -296,7 +336,9 @@ function interpolateColor(color1, color2, steps) {
         throw new Error("无效的颜色输入。请确保颜色格式为 rgb(x, y, z)。");
     }
     if (typeof steps !== "number" || steps <= 1) {
-        throw new Error("步数必须是一个大于1的数字。");
+        console.warn("步数必须是一个大于1的数字。");
+    } else {
+        steps = Math.max(2, steps);
     }
 
     // 初始化变量

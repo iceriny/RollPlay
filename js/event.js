@@ -81,21 +81,29 @@ function hide_input() {
  */
 function import_player() {
     const playerListText = UserInputElement.value;
-    if (playerListText === "") return;
+    if (playerListText === "") {
+        PlayerMap.clear();
+        clear_playerElement()
+    }
     let importPlayerList = playerListText.split(/,|，| |;|；/);
     importPlayerList = importPlayerList.filter((player) => {
         player.trim();
         return player !== "";
     });
-    if (importPlayerList.length === 0) return;
+    if (importPlayerList.length !== 0) {
+        importPlayerList.forEach((player) => {
+            const playerItem = PlayerMap.get(player);
+            if (playerItem === undefined) {
+                PlayerMap.set(player, true);
+            }
+        });
+        PlayerMap.forEach((_v, k) => {
+            if (!importPlayerList.includes(k)) {
+                PlayerMap.delete(k);
+            }
+        })
+    };
 
-    PlayerMap.size = 0;
-    importPlayerList.forEach((player) => {
-        const playerItem = PlayerMap.get(player);
-        if (!playerItem) {
-            PlayerMap.set(player, true);
-        }
-    });
     hide_input();
     UserInputElement.value = "";
     CreateAllPlayerElement();
@@ -104,5 +112,72 @@ function import_player() {
 
 
 function clear_result() {
-    ResultContainerElement.innerHTML = "";
+    const Rubbish = document.createElement("div");
+    Rubbish.classList.add("show");
+
+    ResultContainerElement.appendChild(Rubbish);
+    Array.from(ResultContainerElement.children).forEach(element => {
+        if (element.classList.contains("result-item")) {
+            Rubbish.appendChild(element);
+        }
+    });
+    setTimeout(() => {
+        Rubbish.classList.remove("show");
+        Rubbish.classList.add("slow-hide");
+        Rubbish.style.animation = "dissipated 3s infinite alternate";
+        setTimeout(() => {
+            Rubbish.remove();
+        }, 3000);
+    }, 50);
+}
+
+function clear_playerElement() {
+    const Rubbish = document.createElement("div");
+    Rubbish.classList.add("show");
+
+    PlayerContainer.appendChild(Rubbish);
+    Array.from(PlayerContainer.children).forEach(element => {
+        if (element.classList.contains("player-item")) {
+            Rubbish.appendChild(element);
+        }
+    });
+    setTimeout(() => {
+        Rubbish.classList.remove("show");
+        Rubbish.classList.add("slow-hide");
+        Rubbish.style.animation = "dissipated 3s infinite alternate";
+        setTimeout(() => {
+            Rubbish.remove();
+        }, 3000);
+    }, 50);
+}
+
+/**
+ * 拖动开始
+ * @param {DragEvent} event 拖动事件
+ */
+function logo_dragStart(event) {
+    //event.preventDefault();
+    console.log("dragStart")
+
+    event.target.style.position = "absolute";
+    event.target.style.left = event.clientX + "px";
+    event.target.style.top = event.clientY + "px";
+}
+/**
+ * 拖动中
+ * @param {DragEvent} event 拖动事件
+ */
+function logo_drag(event) {
+    console.log("dragOn")
+
+    event.target.style.left = event.clientX + "px";
+    event.target.style.top = event.clientY + "px";
+}
+/**
+ * 拖动结束
+ * @param {DragEvent} event 拖动事件
+ */
+function logo_dragEnd(event) {
+    console.log("dragEnd")
+    event.target.setAttribute("style", "")
 }

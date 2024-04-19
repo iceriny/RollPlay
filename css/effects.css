@@ -16,7 +16,9 @@
     transition: opacity 3s cubic-bezier(0.075, 0.82, 0.5, 1);
 }
 
-
+.slow-show-animation-class {
+    animation: show-animation 3s cubic-bezier(0.075, 0.82, 0.5, 1);
+}
 
 @keyframes changed-color {
     0% {
@@ -78,5 +80,34 @@
     }
     100% {
         filter: drop-shadow(0px 0px 5rem rgb(0, 255, 238));
+    }
+}
+
+@keyframes dissipated {
+    from {
+        filter: blur(0);
+    }
+    to {
+        filter: blur(50px);
+    }
+}
+
+@keyframes get-low {
+    from {
+        max-height: none;
+    }
+    to {
+        max-height: 0;
+    }
+}
+
+@keyframes show-animation {
+    from {
+        opacity: 0;
+        filter: blur(50px);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0);
     }
 }

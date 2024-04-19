@@ -18,7 +18,7 @@ document.addEventListener("mouseover", (event) => {
             contentElement.addEventListener("mouseleave", () => {
                 clearTimeout(overTimer);
                 overTimer = null;
-                hideTips();
+                hideTips(target);
             });
             addedTipsEventListener = true;
         }
