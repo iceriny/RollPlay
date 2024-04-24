@@ -45,7 +45,7 @@ let PlayerContainer;
 const ImgPath = isLocalhost() ? "../img/" : "./img/";
 /**
  * 玩家列表
- * @type {Map<string, boolean>}
+ * @type {Map<string, boolean>} <名字, 是否启用>
  */
 const PlayerMap = new Map();
 
@@ -212,7 +212,7 @@ function createResultElement(result, isOpen = true) {
  * @param {HTMLDivElement} resultItem 结果项
  * @param {boolean} isOpen 是否打开
  */
-function setResultItemStyle(resultItem, isOpen) {
+function setResultItemStyle(resultItem, isOpen = false) {
     let resultTitleElement = resultItem.querySelector(".result-item-title");
     let expandButtonCheck = resultItem.querySelector("input");
     if (isOpen) {

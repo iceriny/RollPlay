@@ -8,13 +8,31 @@ function Dice(number) {
 
 function Play() {
     /**
-     * @type {[string, number][]}
+     * @type {[name:string, score:number][]}
      */
     const list = [];
-    for (const p of PlayerMap) {
-        if (!p[1]) continue;
-        const info = [p[0]];
-        info.push(Dice(100));
+    const results = new Set();
+    for (const [playerName, enabled] of PlayerMap) {
+        if (!enabled) continue;
+        const info = [playerName];
+
+        let result = -1;
+        let reRoll = true;
+        let rollCount = 0;
+        do {
+            rollCount++;
+            result = Dice(100);
+            if (!results.has(result)) {
+                results.add(result);
+                reRoll = false;
+            }
+            if (rollCount === 100) {
+                results.add(result);
+                reRoll = false;
+            }
+        } while (reRoll);
+
+        info.push(result);
         list.push(info);
     }
     if (list.length === 0) return;
@@ -26,11 +44,10 @@ function InsertResult(result) {
     if (firstResultElement && firstResultElement.className === "result-item") {
         setResultItemStyle(firstResultElement);
     }
-    const r = createResultElement(result)
+    const r = createResultElement(result);
     r.classList.add("show-animation-class");
     ResultContainerElement.insertBefore(r, ResultContainerElement.firstElementChild);
     setTimeout(() => {
         r.classList.remove("show-animation-class");
     }, 3000);
 }
-
